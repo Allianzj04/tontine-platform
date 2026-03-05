@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Details du groupe</title>
+</head>
+<body>
+  <h3>Membres du groupe</h3>
+  {% for membre in membres %}
+    <ul>
+      <li>
+        {{ membre }}
+      </li>
+    </ul>
+  {% endfor %}
+  {% if cycle %}
+    <h3>Cycle en cours: {{ cycle.date_debut }}</h3>
+  {% endif %}
+</body>
+</html>
