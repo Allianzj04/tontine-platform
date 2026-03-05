@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Groupe(models.Model):
   nom = models.CharField(max_length=100)
@@ -14,6 +15,7 @@ class Membre(models.Model):
   prenom = models.CharField(max_length=100)
   email = models.EmailField(unique=True)
   groupes = models.ManyToManyField(Groupe, related_name="membres")
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
 
   def __str__(self):
     return f"{self.prenom} {self.nom}"
