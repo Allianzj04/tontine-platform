@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes groupes</title>
+</head>
+<body>
+  {% for groupe in mes_groupes %}
+    <ul>
+      <li>{{ groupe }}</li>
+    </ul>
+  {% endfor %}
+</body>
+</html>

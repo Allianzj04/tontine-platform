@@ -8,4 +8,4 @@ from .models import Membre
 def liste(request):
   membre = get_object_or_404(Membre, user=request.user)
   groupes = membre.groupes.all()
-  return HttpResponse(f"{groupes}")
+  return render(request, 'core/liste_groupes.html', {'mes_groupes': groupes})
