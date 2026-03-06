@@ -7,10 +7,10 @@
 </head>
 <body>
   <h3>Membres du groupe</h3>
-  {% for membre in membres %}
+  {% for membre, cotisation in cotisation_membre %}
     <ul>
       <li>
-        {{ membre }}
+        {{ membre }} : {{ cotisation.statut }}
       </li>
     </ul>
   {% endfor %}
