@@ -20,6 +20,7 @@ def detail_groupe(request, pk):
   for membre in membres:
     cotisation = cotisations.filter(membre=membre).first()
     cotisation_membre.append((membre, cotisation))
+  
   if request.method == "POST":
     cotisation_id = request.POST.get("cotisation_id")
     cotisation_paye = get_object_or_404(Cotisation, id=cotisation_id)
