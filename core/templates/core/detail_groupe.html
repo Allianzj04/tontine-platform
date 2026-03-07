@@ -11,6 +11,13 @@
     <ul>
       <li>
         {{ membre }} : {{ cotisation.statut }}
+        {% if cotisation.statut == 'non_paye' %}
+          <form method="POST" action="">
+            {% csrf_token %}
+            <button type="submit">Marquer comme payé</button>
+            <input type="hidden" name="cotisation_id" value="{{ cotisation.id }}">
+          </form>
+        {% endif %}
       </li>
     </ul>
   {% endfor %}
