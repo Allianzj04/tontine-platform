@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mes groupes</title>
-</head>
-<body>
-  {% for groupe in groupes %}
-    <ul>
-      <li>{{ groupe }}</li>
-    </ul>
-  {% endfor %}
-</body>
-</html>
+{% extends 'core/base.html' %}
+  {% block content %}
+    {% for groupe in groupes %}
+      <ul>
+        <li>{{ groupe }}</li>
+      </ul>
+    {% endfor %}
+  {% endblock content %}
