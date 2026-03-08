@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Membre, Groupe, Cycle, Cotisation
+from .forms import InscriptionForm
 
 
 @login_required
@@ -29,3 +30,20 @@ def detail_groupe(request, pk):
     return redirect('detail_groupe', pk)
 
   return render(request, 'core/detail_groupe.html', {'membres': membres, 'cycle': cycle, 'cotisation_membre': cotisation_membre})
+
+
+def inscription(request):
+  if request.method == 'POST':
+    form = InscriptionForm(request.POST)
+    if form.is_valid():
+      user = form.save()
+      Membre.objects.create(
+        user=user,
+        nom = form.cleaned_data['nom'],
+        prenom = form.cleaned_data['prenom'],
+        email = form.cleaned_data['email'],
+      )
+      return redirect('login')
+  else:
+    form = InscriptionForm()
+  return render(request, 'core/inscription.html', {'form': form})
