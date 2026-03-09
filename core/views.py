@@ -29,7 +29,7 @@ def detail_groupe(request, pk):
     cotisation_paye.save()
     return redirect('detail_groupe', pk)
 
-  return render(request, 'core/detail_groupe.html', {'membres': membres, 'cycle': cycle, 'cotisation_membre': cotisation_membre})
+  return render(request, 'core/detail_groupe.html', {'membres': membres, 'cycle': cycle, 'cotisation_membre': cotisation_membre, 'groupe': groupe})
 
 
 def inscription(request):
@@ -89,4 +89,4 @@ def creer_cycle(request, pk):
       return redirect('detail_groupe', pk)
   else:
     form = CycleForm()
-  return render(request, 'core/creer_cycle.html', {'form': form})
+  return render(request, 'core/creer_cycle.html', {'form': form, 'groupe': groupe})
