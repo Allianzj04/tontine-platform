@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Groupe(models.Model):
-  nom = models.CharField(max_length=100)
+  nom = models.CharField(max_length=100, unique=True)
   montant_cotisation = models.DecimalField(max_digits=10, decimal_places=2)
   date_creation = models.DateField(auto_now_add=True)
 
