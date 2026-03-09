@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Groupe, Membre
+from .models import Groupe, Membre, Cycle
 
 
 class InscriptionForm(UserCreationForm):
@@ -19,3 +19,9 @@ class GroupeForm(forms.ModelForm):
 
 class AjouterMembreForm(forms.Form):
   membre = forms.ModelChoiceField(queryset=Membre.objects.all())
+
+
+class CycleForm(forms.ModelForm):
+  class Meta:
+    model = Cycle
+    fields = ['date_debut',]
