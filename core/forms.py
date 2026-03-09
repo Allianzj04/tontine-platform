@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Groupe
+from .models import Groupe, Membre
 
 
 class InscriptionForm(UserCreationForm):
@@ -16,3 +16,6 @@ class GroupeForm(forms.ModelForm):
   class Meta:
     model = Groupe
     fields = ['nom', 'montant_cotisation']
+
+class AjouterMembreForm(forms.Form):
+  membre = forms.ModelChoiceField(queryset=Membre.objects.all())
