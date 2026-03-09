@@ -17,6 +17,8 @@
   {% endfor %}
   {% if cycle %}
     <h3>Cycle en cours: {{ cycle.date_debut }}</h3>
+    {% else %}
+      <a href="{% url 'creer_cycle' groupe.id %}">Create a new cycle</a>
   {% endif %}
 {% endblock content %}
 
