@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Membre, Groupe, Cycle, Cotisation
-from .forms import InscriptionForm, GroupeForm, AjouterMembreForm
+from .forms import InscriptionForm, GroupeForm, AjouterMembreForm, CycleForm
 
 
 @login_required
@@ -75,3 +75,18 @@ def ajouter_membre(request, pk):
   else:
     form = AjouterMembreForm()
   return render(request, 'core/ajouter_membre.html', {'form': form})
+
+
+@login_required
+def creer_cycle(request, pk):
+  if request.method == 'POST':
+    form = CycleForm(request.POST)
+    if form.is_valid():
+      cycle = form.save(commit=False)
+      groupe = get_object_or_404(Groupe, id=pk)
+      cycle.groupe = groupe
+      cycle.save()
+      return redirect('detail_groupe', pk)
+  else:
+    form = CycleForm()
+  return render(request, 'core/creer_cycle.html', {'form': form})
