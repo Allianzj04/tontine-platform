@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Membre, Groupe, Cycle, Cotisation
-from .forms import InscriptionForm
+from .forms import InscriptionForm, GroupeForm
 
 
 @login_required
@@ -47,3 +47,17 @@ def inscription(request):
   else:
     form = InscriptionForm()
   return render(request, 'core/inscription.html', {'form': form})
+
+@login_required
+def creer_groupe(request):
+  if request.method == 'POST':
+    form = GroupeForm(request.POST)
+    if form.is_valid():
+      groupe = form.save()
+      user = request.user
+      membre = get_object_or_404(Membre, user=user)
+      membre.groupes.add(groupe)
+      return redirect('liste_groupes')
+  else:
+    form = GroupeForm()
+  return render(request, 'core/creer_groupe.html', {'form': form})

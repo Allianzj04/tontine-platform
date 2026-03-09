@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('groupes/', views.liste, name='liste_groupes'),
+    path('groupes/creer/', views.creer_groupe, name='creer_groupe'),
     path('groupes/<int:pk>/', views.detail_groupe, name='detail_groupe'),
     path('inscription/', views.inscription, name='inscription'),
 ]
