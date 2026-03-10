@@ -79,11 +79,11 @@ def ajouter_membre(request, pk):
 
 @login_required
 def creer_cycle(request, pk):
+  groupe = get_object_or_404(Groupe, id=pk)
   if request.method == 'POST':
     form = CycleForm(request.POST)
     if form.is_valid():
       cycle = form.save(commit=False)
-      groupe = get_object_or_404(Groupe, id=pk)
       cycle.groupe = groupe
       cycle.save()
       return redirect('detail_groupe', pk)
