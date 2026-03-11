@@ -1,20 +1,40 @@
 {% extends 'core/base.html' %}
 {% block content %}
-    <h3>Membres du groupe</h3>
-  {% for membre, cotisation in cotisation_membre %}
-    <ul>
-      <li>
-        {{ membre }} : {{ cotisation.statut }}
-        {% if cotisation.statut == 'non_paye' %}
-          <form method="POST" action="">
+  <h3>Membres du groupe</h3>
+    <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Members</th>
+        <th scope="col">cotisations Status</th>
+        <th scope="col">To pay</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for membre, cotisation in cotisation_membre %}
+      <tr>
+        <th scope="row">{{ membre.id }}</th>
+        <td>{{ membre }}</td>
+        <td>
+          {% if cotisation.statut == 'paye' %}
+            <span class="badge bg-success">Payé</span>
+            {% else %}
+            <span class="badge bg-danger">Non payé</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if cotisation.statut == 'non_paye' %}
+            <form method="POST" action="">
             {% csrf_token %}
-            <button type="submit">Marquer comme payé</button>
-            <input type="hidden" name="cotisation_id" value="{{ cotisation.id }}">
-          </form>
-        {% endif %}
-      </li>
-    </ul>
-  {% endfor %}
+              <button type="submit" class="btn btn-success btn-sm">Marquer comme payé</button>
+              <input type="hidden" name="cotisation_id" value="{{ cotisation.id }}">
+            </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   {% if cycle %}
     <h3>Cycle en cours: {{ cycle.date_debut }}</h3>
     {% else %}
