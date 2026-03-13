@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Membre, Groupe, Cycle, Cotisation
 from .forms import InscriptionForm, GroupeForm, AjouterMembreForm, CycleForm
+from core.analytics import get_analytics
 
 
 @login_required
@@ -90,3 +91,9 @@ def creer_cycle(request, pk):
   else:
     form = CycleForm()
   return render(request, 'core/creer_cycle.html', {'form': form, 'groupe': groupe})
+
+
+@login_required
+def dashboard(request):
+  data = get_analytics()
+  return render(request, 'core/dashboard.html', data)

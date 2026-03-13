@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+{% block content %}
+  <h2>Tableau de bord</h2>
+  {% for groupe, total in total_collecte.items %}
+    <p>{{ groupe }} : {{ total }}</p>
+  {% endfor %}
+  <br>
+  <h4>Liste des retardataires</h4>
+  {% for row in retardataires  %}
+    <p>{{ row.membre__nom }} </p>
+  {% endfor %}
+{% endblock content %}
