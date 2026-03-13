@@ -118,3 +118,5 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 LOGIN_REDIRECT_URL = 'liste_groupes'
+
+LOGOUT_REDIRECT_URL = 'login'
