@@ -17,6 +17,9 @@ def get_analytics():
   df = pd.DataFrame(data)
   # print(df)
 
+  df['montant_du'] = np.where(df['statut'] == 'paye', 0, df['cycle__groupe__montant_cotisation'])
+  df['montant_verse'] = np.where(df['statut'] == 'paye', df['cycle__groupe__montant_cotisation'], 0)
+
   df_taux = df.groupby('cycle__groupe__nom')['statut'].value_counts(normalize=True)*100
   # print(df_taux)
 
@@ -27,7 +30,4 @@ def get_analytics():
   total_groupes = df_paye.groupby('cycle__groupe__nom')['cycle__groupe__montant_cotisation'].sum()
   # print(total_groupes)
 
-  df['montant_du'] = np.where(df['statut'] == 'paye', 0, df['cycle__groupe__montant_cotisation'])
-  df['montant_verse'] = np.where(df['statut'] == 'paye', df['cycle__groupe__montant_cotisation'], 0)
-
-  return {'taux_participation': df_taux,'retardataires': df_retard.to_dict('records'), 'total_collecte': total_groupes.to_dict(), 'df': df }
+  return {'taux_participation': df_taux.to_dict(),'retardataires': df_retard.to_dict('records'), 'total_collecte': total_groupes.to_dict(), 'df': df }

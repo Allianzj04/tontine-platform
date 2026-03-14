@@ -1,12 +1,41 @@
 {% extends "core/base.html" %}
 {% block content %}
-  <h2>Tableau de bord</h2>
-  {% for groupe, total in total_collecte.items %}
-    <p>{{ groupe }} : {{ total }}</p>
-  {% endfor %}
+  <div class="card mb-4">
+    <div class="card-header">Tableau de bord</div>
+    <div class="card-body">
+      {% for groupe, total in total_collecte.items %}
+        <p>{{ groupe }} : {{ total }}</p>
+      {% endfor %}
+    </div>
+  </div>
+<br>
+  <div class="card mb-4">
+    <div class="card-header">Liste des retardataires</div>
+    <div class="card-body">
+      <table class="table">
+        <thead><tr><th>Nom</th><th>Montant dû</th></tr></thead>
+        <tbody>
+          {% for row in retardataires  %}
+            <tr>
+              <td>{{ row.membre__nom }}</td>
+              <td>{{ row.montant_du }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
   <br>
-  <h4>Liste des retardataires</h4>
-  {% for row in retardataires  %}
-    <p>{{ row.membre__nom }} </p>
-  {% endfor %}
+  <div class="card mb-4">
+    <div class="card-header">Taux de paiement par groupe</div>
+    <div class="card-body">
+      {% for groupe_statut, taux in taux_participation.items %}
+        {% if groupe_statut.1 == 'paye' %}
+          <p>{{ groupe_statut.0 }} - <span class="badge bg-success">payé</span> : {{ taux }}</p>
+          {% else %}
+            <p>{{ groupe_statut.0 }} - <span class="badge bg-danger">non payé</span> : {{ taux }}</p>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
 {% endblock content %}
