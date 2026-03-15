@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <h3>Group members</h3>
+    <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Members</th>
+        <th scope="col">contributions Status</th>
+        <th scope="col">To pay</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for member, contribution in member_contributions %}
+      <tr>
+        <th scope="row">{{ member.id }}</th>
+        <td>{{ member }}</td>
+        <td>
+          {% if contribution.status == 'paid' %}
+            <span class="badge bg-success">Paid</span>
+            {% else %}
+            <span class="badge bg-danger">Unpaid</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if contribution.status == 'unpaid' %}
+            <form method="POST" action="">
+            {% csrf_token %}
+              <button type="submit" class="btn btn-success btn-sm">Mark as paid</button>
+              <input type="hidden" name="contribution_id" value="{{ contribution.id }}">
+            </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if cycle %}
+    <h3>Active cycle: {{ cycle.start_date }}</h3>
+    {% else %}
+      <a href="{% url 'create_cycle' group.id %}">Create a new cycle</a>
+  {% endif %}
+{% endblock content %}
+
+

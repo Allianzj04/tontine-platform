@@ -2,11 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('groupes/', views.liste, name='liste_groupes'),
-    path('groupes/creer/', views.creer_groupe, name='creer_groupe'),
-    path('groupes/<int:pk>/', views.detail_groupe, name='detail_groupe'),
-    path('groupes/<int:pk>/ajouter_membre/', views.ajouter_membre, name='ajouter_membre'),
-    path('inscription/', views.inscription, name='inscription'),
-    path('groupes/<int:pk>/creer_cycle/', views.creer_cycle, name='creer_cycle'),
+    path('groups/', views.list_groups, name='list_groups'),
+    path('groups/create/', views.create_group, name='create_group'),
+    path('groups/<int:pk>/', views.detail_group, name='detail_group'),
+    path('groups/<int:pk>/add_member/', views.add_member, name='add_member'),
+    path('signup/', views.signup, name='signup'),
+    path('groups/<int:pk>/create_cycle/', views.create_cycle, name='create_cycle'),
     path('dashboard/', views.dashboard, name='dashboard'),
 ]

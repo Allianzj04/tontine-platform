@@ -1,11 +1,11 @@
 {% extends 'core/base.html' %}
   {% block content %}
-    {% for groupe in groupes %}
+    {% for group in groups %}
     <div class='card mb-3' style='width:18rem;'>
       <ul class='list-group list-group-flush'>
-        <li><a href="{% url 'detail_groupe' groupe.id %}">{{ groupe }}</a></li>
+        <li><a href="{% url 'detail_group' group.id %}">{{ group }}</a></li>
       </ul>
     </div>
     {% endfor %}
-    <a href="{% url 'creer_groupe' %}" class="btn btn-primary">Create a new group?</a>
+    <a href="{% url 'create_group' %}" class="btn btn-primary">Create a new group?</a>
   {% endblock content %}

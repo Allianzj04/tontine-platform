@@ -1,24 +1,24 @@
 {% extends "core/base.html" %}
 {% block content %}
   <div class="card mb-4">
-    <div class="card-header">Tableau de bord</div>
+    <div class="card-header">Dashboard</div>
     <div class="card-body">
-      {% for groupe, total in total_collecte.items %}
-        <p>{{ groupe }} : {{ total }}</p>
+      {% for group, total in total_collected.items %}
+        <p>{{ group }} : {{ total }}</p>
       {% endfor %}
     </div>
   </div>
 <br>
   <div class="card mb-4">
-    <div class="card-header">Liste des retardataires</div>
+    <div class="card-header">Defaulters</div>
     <div class="card-body">
       <table class="table">
-        <thead><tr><th>Nom</th><th>Montant dû</th></tr></thead>
+        <thead><tr><th>Name</th><th>Amount due</th></tr></thead>
         <tbody>
-          {% for row in retardataires  %}
+          {% for row in defaulters  %}
             <tr>
-              <td>{{ row.membre__nom }}</td>
-              <td>{{ row.montant_du }}</td>
+              <td>{{ row.member__first_name }} {{row.member__last_name}}</td>
+              <td>{{ row.amount_due }}</td>
             </tr>
           {% endfor %}
         </tbody>
@@ -27,13 +27,13 @@
   </div>
   <br>
   <div class="card mb-4">
-    <div class="card-header">Taux de paiement par groupe</div>
+    <div class="card-header">Payment rate by group</div>
     <div class="card-body">
-      {% for groupe_statut, taux in taux_participation.items %}
-        {% if groupe_statut.1 == 'paye' %}
-          <p>{{ groupe_statut.0 }} - <span class="badge bg-success">payé</span> : {{ taux }}</p>
+      {% for group_status, taux in participation_rate.items %}
+        {% if group_status.1 == 'paid' %}
+          <p>{{ group_status.0 }} - <span class="badge bg-success">paid</span> : {{ taux }}</p>
           {% else %}
-            <p>{{ groupe_statut.0 }} - <span class="badge bg-danger">non payé</span> : {{ taux }}</p>
+            <p>{{ group_status.0 }} - <span class="badge bg-danger">unpaid</span> : {{ taux }}</p>
         {% endif %}
       {% endfor %}
     </div>

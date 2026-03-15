@@ -1,33 +1,33 @@
 import pandas as pd
 import numpy as np
-from core.models import Cotisation
+from core.models import Contribution
 
 
 def get_analytics():
-  data = Cotisation.objects.all().values(
+  data = Contribution.objects.all().values(
   'id',
-  'membre__nom',
-  'membre__prenom',
-  'cycle__groupe__nom',
-  'statut',
-  'date_paiement',
-  'cycle__groupe__montant_cotisation'
+  'member__first_name',
+  'member__last_name',
+  'cycle__group__name',
+  'status',
+  'payment_date',
+  'cycle__group__amount'
 )
 
   df = pd.DataFrame(data)
   # print(df)
 
-  df['montant_du'] = np.where(df['statut'] == 'paye', 0, df['cycle__groupe__montant_cotisation'])
-  df['montant_verse'] = np.where(df['statut'] == 'paye', df['cycle__groupe__montant_cotisation'], 0)
+  df['amount_due'] = np.where(df['status'] == 'paid', 0, df['cycle__group__amount'])
+  df['amount_paid'] = np.where(df['status'] == 'paid', df['cycle__group__amount'], 0)
 
-  df_taux = df.groupby('cycle__groupe__nom')['statut'].value_counts(normalize=True)*100
-  # print(df_taux)
+  df_rate = df.groupby('cycle__group__name')['status'].value_counts(normalize=True)*100
+  # print(df_rate)
 
-  df_retard = df[df['statut'] == 'non_paye']
-  # print(df_retard)
+  df_defaulters = df[df['status'] == 'unpaid']
+  # print(df_defaulters)
 
-  df_paye = df[df['statut'] == 'paye']
-  total_groupes = df_paye.groupby('cycle__groupe__nom')['cycle__groupe__montant_cotisation'].sum()
-  # print(total_groupes)
+  df_paid = df[df['status'] == 'paid']
+  total_groups = df_paid.groupby('cycle__group__name')['cycle__group__amount'].sum()
+  # print(total_groups)
 
-  return {'taux_participation': df_taux.to_dict(),'retardataires': df_retard.to_dict('records'), 'total_collecte': total_groupes.to_dict(), 'df': df }
+  return {'participation_rate': df_rate.to_dict(),'defaulters': df_defaulters.to_dict('records'), 'total_collected': total_groups.to_dict(), 'df': df }

@@ -5,21 +5,21 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tontine.settings')
 django.setup()
 
 from django.contrib.auth.models import User
-from core.models import Membre, Groupe, Cycle
+from core.models import Member, Group, Cycle
 from faker import Faker
 import random
 from datetime import date
 
-fake = Faker('fr_FR')
+fake = Faker('en_US')
 
-# --- Nettoyage ---
+# --- Cleanup ---
 Cycle.objects.all().delete()
-Groupe.objects.all().delete()
-Membre.objects.all().delete()
+Group.objects.all().delete()
+Member.objects.all().delete()
 User.objects.filter(is_superuser=False).delete()
 
-# --- Création membres ---
-membres = []
+# --- Create members ---
+members = []
 for _ in range(20):
   user = User.objects.create_user(
     username=fake.user_name(),
@@ -27,39 +27,39 @@ for _ in range(20):
     email=fake.email()
   )
 
-  membre = Membre.objects.create(
-    nom=fake.last_name(),
-    prenom=fake.first_name(),
+  member = Member.objects.create(
+    first_name=fake.first_name(),
+    last_name=fake.last_name(),
     email=user.email,
     user=user
   )
-  membres.append(membre)
+  members.append(member)
 
-# --- Création groupes ---
-groupes = []
+# --- Create groups ---
+groups = []
 for _ in range(3):
-  groupe = Groupe.objects.create(
-    nom=f"Tontine {fake.city()}",
-    montant_cotisation=random.choice([10000, 25000, 50000])
+  group = Group.objects.create(
+    name=f"Tontine {fake.city()}",
+    amount=random.choice([10000, 25000, 50000])
   )
-  groupes.append(groupe)
+  groups.append(group)
 
-# --- Ajout membres aux groupes ---
-for groupe in groupes:
-  membres_choisis = random.sample(membres, k=random.randint(5, 10))
-  for membre in membres_choisis:
-    groupe.membres.add(membre)
+# --- Assign members to groups ---
+for group in groups:
+  selected_members = random.sample(members, k=random.randint(5, 10))
+  for member in selected_members:
+    group.members.add(member)
 
-# --- Création cycles ---
-for groupe in groupes:
+# --- Create cycles ---
+for group in groups:
   Cycle.objects.create(
-    groupe=groupe,
-    date_debut = date.today(),
-    statut='en_cours'
+    group=group,
+    start_date = date.today(),
+    status='active'
   )
 
-print("Seed terminé.")
-print(f"Membres: {Membre.objects.count()}")
-print(f"Groupes: {Groupe.objects.count()}")
+print("Seed completed.")
+print(f"Members: {Member.objects.count()}")
+print(f"Groups: {Group.objects.count()}")
 print(f"Cycles: {Cycle.objects.count()}")
 
