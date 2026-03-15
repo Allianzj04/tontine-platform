@@ -3,4 +3,4 @@ __pycache__/
 *.pyc
 db.sqlite3
 .env
-contributions_analytics.csv
+cotisations_analytics.csv
