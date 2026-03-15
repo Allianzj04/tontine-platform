@@ -1,52 +1,52 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class Groupe(models.Model):
-  nom = models.CharField(max_length=100, unique=True)
-  montant_cotisation = models.DecimalField(max_digits=10, decimal_places=2)
-  date_creation = models.DateField(auto_now_add=True)
+class Group(models.Model):
+  name = models.CharField(max_length=100, unique=True)
+  amount = models.DecimalField(max_digits=10, decimal_places=2)
+  created_at = models.DateField(auto_now_add=True)
 
   def __str__(self):
-    return self.nom
+    return self.name
 
 
-class Membre(models.Model):
-  nom = models.CharField(max_length=100)
-  prenom = models.CharField(max_length=100)
+class Member(models.Model):
+  first_name = models.CharField(max_length=100)
+  last_name = models.CharField(max_length=100)
   email = models.EmailField(unique=True)
-  groupes = models.ManyToManyField(Groupe, related_name="membres")
+  groups = models.ManyToManyField(Group, related_name="members")
   user = models.OneToOneField(User, on_delete=models.CASCADE)
 
   def __str__(self):
-    return f"{self.prenom} {self.nom}"
+    return f"{self.first_name} {self.last_name}"
   
 
 class Cycle(models.Model):
   STATUT_CHOICES = [
-    ('en_cours', 'En cours'),
-    ('termine', 'Terminé'),
+    ('active', 'Active'),
+    ('completed', 'Completed'),
   ]
-  date_debut = models.DateField()
-  groupe = models.ForeignKey(Groupe, on_delete=models.CASCADE, related_name="cycles")
-  statut = models.CharField(max_length=100, choices=STATUT_CHOICES, default='en_cours')
+  start_date = models.DateField()
+  group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="cycles")
+  status = models.CharField(max_length=100, choices=STATUT_CHOICES, default='active')
 
-class Cotisation(models.Model):
+class Contribution(models.Model):
   STATUT_CHOICES = [
-    ('paye', 'Payé'),
-    ('non_paye', 'Non Payé'),
+    ('paid', 'Paid'),
+    ('unpaid', 'Unpaid'),
   ]
-  membre = models.ForeignKey(Membre, on_delete=models.CASCADE, related_name="cotisations")
-  cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name="cotisations")
-  statut = models.CharField(max_length=100, choices=STATUT_CHOICES, default='non_paye')
-  date_paiement = models.DateField(null=True, blank=True)
+  member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="contributions")
+  cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name="contributions")
+  status = models.CharField(max_length=100, choices=STATUT_CHOICES, default='unpaid')
+  payment_date = models.DateField(null=True, blank=True)
 
 
-class Tour(models.Model):
+class Round(models.Model):
   STATUT_CHOICES = [
-    ('verse', 'Versé'),
-    ('non_verse', 'Non versé'),
+    ('paid', 'Paid'),
+    ('unpaid', 'Unpaid'),
   ]
-  membre = models.ForeignKey(Membre, on_delete=models.CASCADE, related_name='tours')
-  cycle = models.OneToOneField(Cycle, on_delete=models.CASCADE, related_name='tour')
-  statut = models.CharField(max_length=100, choices=STATUT_CHOICES, default='non_verse')
+  member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='rounds')
+  cycle = models.OneToOneField(Cycle, on_delete=models.CASCADE, related_name='round')
+  status = models.CharField(max_length=100, choices=STATUT_CHOICES, default='unpaid')
 
