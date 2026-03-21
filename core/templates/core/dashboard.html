@@ -69,12 +69,12 @@
     <div class="card-header">Financial situation per group</div>
     <div class="card-body">
       <table class="table">
-        <thead><tr><th>Group</th><th>Amount due</th><th>Amount paid</th><th>Amount missing</th></tr></thead>
+        <thead><tr><th>Group</th><th>Amount expected</th><th>Amount paid</th><th>Amount missing</th></tr></thead>
         <tbody>
           {% for row in financial %}
             <tr>
               <td>{{ row.cycle__group__name }}</td>
-              <td>{{ row.amount_due }}</td>
+              <td>{{ row.amount_expected }}</td>
               <td><span class="badge bg-success">{{ row.amount_paid }}</span></td> 
               <td><span class="badge bg-danger">{{ row.amount_missing }}</span></td> 
             </tr>

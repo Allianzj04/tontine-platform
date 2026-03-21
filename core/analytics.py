@@ -40,8 +40,10 @@ def get_analytics():
   # print(df_rate_member.columns.tolist())
   # print(df_rate_member)
 
-  df_financial = df.groupby('cycle__group__name')[['amount_due', 'amount_paid']].sum()
-  df_financial['amount_missing'] = df_financial['amount_due'] - df_financial['amount_paid']
+  df_financial = pd.DataFrame()
+  df_financial['amount_expected'] = df.groupby('cycle__group__name')['cycle__group__amount'].sum()
+  df_financial['amount_paid'] = df.groupby('cycle__group__name')['amount_paid'].sum()
+  df_financial['amount_missing'] = df_financial['amount_expected'] - df_financial['amount_paid']
 
   return {
     'participation_rate': df_rate.to_dict(),
