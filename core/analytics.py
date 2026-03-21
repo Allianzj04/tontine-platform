@@ -6,6 +6,7 @@ from core.models import Contribution
 def get_analytics():
   data = Contribution.objects.all().values(
   'id',
+  'member__id',
   'member__first_name',
   'member__last_name',
   'cycle__group__name',
@@ -30,4 +31,20 @@ def get_analytics():
   total_groups = df_paid.groupby('cycle__group__name')['cycle__group__amount'].sum()
   # print(total_groups)
 
-  return {'participation_rate': df_rate.to_dict(),'defaulters': df_defaulters.to_dict('records'), 'total_collected': total_groups.to_dict(), 'df': df }
+  rate = df.groupby('member__id')['status'].value_counts(normalize=True)*100
+  df_rate_member = rate.loc[:, 'paid'].reset_index()
+  df_names = df[['member__id', 'member__first_name', 'member__last_name']].drop_duplicates()
+  df_rate_member = df_rate_member.merge(df_names, on='member__id')
+  df_rate_member = df_rate_member.rename(columns={'proportion': 'reliability_rate'})
+  df_rate_member = df_rate_member.sort_values('reliability_rate', ascending=False)
+  # print(df_rate_member.columns.tolist())
+  # print(df_rate_member)
+
+  df_financial = df.groupby('cycle__group__name')[['amount_due', 'amount_paid']].sum()
+  df_financial['amount_missing'] = df_financial['amount_due'] - df_financial['amount_paid']
+
+  return {
+    'participation_rate': df_rate.to_dict(),
+    'defaulters': df_defaulters.to_dict('records'), 'total_collected': total_groups.to_dict(),
+    'rate_member': df_rate_member.to_dict('records'),
+    'financial': df_financial.reset_index().to_dict('records') }
