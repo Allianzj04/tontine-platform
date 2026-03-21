@@ -29,13 +29,58 @@
   <div class="card mb-4">
     <div class="card-header">Payment rate by group</div>
     <div class="card-body">
-      {% for group_status, taux in participation_rate.items %}
+      {% for group_status, rate in participation_rate.items %}
         {% if group_status.1 == 'paid' %}
-          <p>{{ group_status.0 }} - <span class="badge bg-success">paid</span> : {{ taux }}</p>
+          <p>{{ group_status.0 }} - <span class="badge bg-success">paid</span> : {{ rate|floatformat:1 }}</p>
           {% else %}
-            <p>{{ group_status.0 }} - <span class="badge bg-danger">unpaid</span> : {{ taux }}</p>
+            <p>{{ group_status.0 }} - <span class="badge bg-danger">unpaid</span> : {{ rate|floatformat:1 }}</p>
         {% endif %}
       {% endfor %}
+    </div>
+  </div>
+  <br>
+  <div class="card mb-4">
+    <div class="card-header">Payment rate by member</div>
+    <div class="card-body">
+      <table class="table">
+        <thead><tr><th>First name</th><th>Last name</th><th>Reliability rate</th></tr></thead>
+        <tbody>
+          {% for row in rate_member %}
+            <tr>
+              {% if row.reliability_rate > 50 %}
+                <td>{{ row.member__first_name }} </td>
+                <td>{{row.member__last_name }} </td>
+                <td><span class="badge bg-success">{{ row.reliability_rate|floatformat:1 }}</span></td>
+              {% else %}
+                <td>
+                  {{ row.member__first_name }} 
+                </td>
+                <td>{{row.member__last_name }} </td>
+                <td><span class="badge bg-danger">{{ row.reliability_rate|floatformat:1 }}</span></td>
+              {% endif %}
+            </tr>  
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+  <div class="card mb-4">
+    <div class="card-header">Financial situation per group</div>
+    <div class="card-body">
+      <table class="table">
+        <thead><tr><th>Group</th><th>Amount due</th><th>Amount paid</th><th>Amount missing</th></tr></thead>
+        <tbody>
+          {% for row in financial %}
+            <tr>
+              <td>{{ row.cycle__group__name }}</td>
+              <td>{{ row.amount_due }}</td>
+              <td><span class="badge bg-success">{{ row.amount_paid }}</span></td> 
+              <td><span class="badge bg-danger">{{ row.amount_missing }}</span></td> 
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 {% endblock content %}
