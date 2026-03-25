@@ -32,10 +32,11 @@ def get_analytics():
   # print(total_groups)
 
   rate = df.groupby('member__id')['status'].value_counts(normalize=True)*100
-  df_rate_member = rate.loc[:, 'paid'].reset_index()
+  rate = rate.unstack(fill_value=0)
+  df_rate_member = rate['paid'].reset_index()
   df_names = df[['member__id', 'member__first_name', 'member__last_name']].drop_duplicates()
   df_rate_member = df_rate_member.merge(df_names, on='member__id')
-  df_rate_member = df_rate_member.rename(columns={'proportion': 'reliability_rate'})
+  df_rate_member = df_rate_member.rename(columns={'paid': 'reliability_rate'})
   df_rate_member = df_rate_member.sort_values('reliability_rate', ascending=False)
   # print(df_rate_member.columns.tolist())
   # print(df_rate_member)
