@@ -5,10 +5,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tontine.settings')
 django.setup()
 
 from django.contrib.auth.models import User
-from core.models import Member, Group, Cycle
+from core.models import Member, Group, Cycle, Contribution
 from faker import Faker
 import random
-from datetime import date
+from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
 
 fake = Faker('en_US')
 
@@ -52,14 +53,25 @@ for group in groups:
 
 # --- Create cycles ---
 for group in groups:
-  Cycle.objects.create(
-    group=group,
-    start_date = date.today(),
-    status='active'
-  )
+  for i in range(6):
+    Cycle.objects.create(
+      group=group,
+      start_date = date.today() - relativedelta(months=i),
+      status='active'
+    )
+
+# --- Randomize the contributions ---
+for contribution in Contribution.objects.all():
+  if random.random() < 0.7:
+    contribution.status = 'paid'
+    contribution.payment_date = date.today() - timedelta(days=random.randint(1, 30))
+    contribution.save()
 
 print("Seed completed.")
 print(f"Members: {Member.objects.count()}")
 print(f"Groups: {Group.objects.count()}")
 print(f"Cycles: {Cycle.objects.count()}")
+print(f"Contributions: {Contribution.objects.count()}")
+print(f"Paid contributions: {Contribution.objects.filter(status='paid').count()}")
+print(f"Unpaid contributions: {Contribution.objects.filter(status="unpaid").count()}")
 
