@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from api.database import execute_query
 
 app = FastAPI()
@@ -25,3 +25,13 @@ INNER JOIN core_contribution co ON co.cycle_id = cy.id
 GROUP BY g.name;
 """)
   return {"financial": financial_by_group}
+
+@app.get("/members/{member_id}")
+def get_member(member_id: int):
+  member = execute_query(
+    "SELECT id, first_name, last_name FROM core_member WHERE id=%s", 
+    (member_id,)
+    )
+  if member:
+    return member[0]
+  raise HTTPException(status_code=404, detail="Member not found")
