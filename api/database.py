@@ -9,10 +9,10 @@ def get_connection():
     port='5432'
   )
 
-def execute_query(sql):
+def execute_query(sql, params=None):
   conn = get_connection()
   cursor = conn.cursor()
-  cursor.execute(sql)
+  cursor.execute(sql, params)
   rows = cursor.fetchall()
   columns = [col.name for col in cursor.description]
   results = [dict(zip(columns, row)) for row in rows]
