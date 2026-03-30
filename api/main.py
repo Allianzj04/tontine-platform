@@ -3,11 +3,11 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from passlib.context import CryptContext
 from api.database import execute_query
 from api.auth import create_token, verify_token
+from django.contrib.auth.hashers import check_password
 
 app = FastAPI()
 
 
-pwd_context = CryptContext(schemes=["bcrypt"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
@@ -67,7 +67,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
   user = execute_query("SELECT id, password FROM auth_user WHERE username=%s", (form_data.username,))
   if user:
     pwd = user[0]["password"]
-    if pwd_context.verify(form_data.password, pwd):
+    if check_password(form_data.password, pwd):
       token = create_token(form_data.username)
       return {"access_token": token, "token_type": "bearer"}
   raise HTTPException(status_code=401, detail="Invalid user or password")
