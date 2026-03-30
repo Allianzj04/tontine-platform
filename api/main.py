@@ -1,19 +1,29 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from passlib.context import CryptContext
 from api.database import execute_query
+from api.auth import create_token, verify_token
 
 app = FastAPI()
+
+
+pwd_context = CryptContext(schemes=["bcrypt"])
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
 
 @app.get("/")
 def root():
   return {"message": "Tontine API is running"}
 
 @app.get("/members")
-def get_members():
+def get_members(token: str = Depends(oauth2_scheme)):
+  username = verify_token(token)
   members = execute_query("SELECT id, first_name, last_name FROM core_member")
   return {"members": members}
 
 @app.get("/groups/financial")
-def get_financial():
+def get_financial(token: str = Depends(oauth2_scheme)):
+  username = verify_token(token)
   financial_by_group = execute_query("""
     SELECT
       g.name,
@@ -27,7 +37,8 @@ def get_financial():
   return {"financial": financial_by_group}
 
 @app.get("/members/{member_id}")
-def get_member(member_id: int):
+def get_member(member_id: int, token: str = Depends(oauth2_scheme)):
+  username = verify_token(token)
   member = execute_query(
     "SELECT id, first_name, last_name FROM core_member WHERE id=%s", 
     (member_id,)
@@ -37,7 +48,8 @@ def get_member(member_id: int):
   raise HTTPException(status_code=404, detail="Member not found")
 
 @app.get("/contributions")
-def get_contribution(status: str = None):
+def get_contribution(status: str = None, token: str = Depends(oauth2_scheme)):
+  username = verify_token(token)
   sql = """
       SELECT co.id, co.status, co.payment_date, cy.start_date, g.name, m.first_name, m.last_name
       FROM core_contribution co
@@ -49,3 +61,14 @@ def get_contribution(status: str = None):
     sql += " WHERE co.status=%s"
     return execute_query(sql, (status,))
   return execute_query(sql)
+
+@app.post("/login")
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
+  user = execute_query("SELECT id, password FROM auth_user WHERE username=%s", (form_data.username,))
+  if user:
+    pwd = user[0]["password"]
+    if pwd_context.verify(form_data.password, pwd):
+      token = create_token(form_data.username)
+      return {"access_token": token, "token_type": "bearer"}
+  raise HTTPException(status_code=401, detail="Invalid user or password")
+  
