@@ -121,3 +121,18 @@ STATIC_URL = 'static/'
 LOGIN_REDIRECT_URL = 'list_groups'
 
 LOGOUT_REDIRECT_URL = 'login'
+
+
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
