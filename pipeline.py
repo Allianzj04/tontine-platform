@@ -1,15 +1,17 @@
 import django
 import os
+from dotenv import load_dotenv
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tontine.settings')
 django.setup()
 
 import psycopg2, pandas as pd
 
+load_dotenv()
 conn = psycopg2.connect(
   dbname='tontine_db',
   user='postgres',
-  password='1234',
+  password=os.getenv("DB_PASSWORD"),
   host='localhost',
   port='5432'
 )
