@@ -24,6 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 load_dotenv()
+import sys
+print("DEBUG =", DEBUG, file=sys.stderr)
+print("DATABASE_URL =", os.getenv("DATABASE_URL"), file=sys.stderr)
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
