@@ -1,1 +1,1 @@
-web: gunicorn tontine.wsgi
+web: gunicorn tontine.wsgi --bind 0.0.0.0:$PORT
