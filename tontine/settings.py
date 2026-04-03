@@ -29,7 +29,7 @@ import sys
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG") == "TRUE"
+DEBUG = os.getenv("DEBUG") == "True"
 print("DEBUG =", DEBUG, file=sys.stderr)
 print("DATABASE_URL =", os.getenv("DATABASE_URL"), file=sys.stderr)
 
