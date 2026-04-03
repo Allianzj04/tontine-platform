@@ -24,14 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 load_dotenv()
-import sys
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "True"
-print("DEBUG =", DEBUG, file=sys.stderr)
-print("DATABASE_URL =", os.getenv("DATABASE_URL"), file=sys.stderr)
 
 ALLOWED_HOSTS = ['*']
 
@@ -126,17 +123,3 @@ LOGIN_REDIRECT_URL = 'list_groups'
 
 LOGOUT_REDIRECT_URL = 'login'
 
-
-
-LOGGING = {
-    'version': 1,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',
-    },
-}
