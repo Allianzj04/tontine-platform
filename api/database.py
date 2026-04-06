@@ -1,17 +1,20 @@
 import psycopg2
 import os
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def get_connection():
-  return psycopg2.connect(
-    dbname='tontine_db',
-    user='postgres',
-    password=os.getenv("DB_PASSWORD"),
-    host='localhost',
-    port='5432'
+  url = urlparse(os.getenv("DATABASE_URL"))
+  conn = psycopg2.connect(
+    dbname=url.path[1:],
+    user=url.username,
+    password=url.password,
+    host=url.hostname,
+    port=url.port
   )
+  return conn
 
 def execute_query(sql, params=None):
   conn = get_connection()

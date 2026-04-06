@@ -1,11 +1,6 @@
-import os
-import django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tontine.settings')
-django.setup()
-
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from passlib.context import CryptContext
+from passlib.handlers.django import django_pbkdf2_sha256
 from api.database import execute_query
 from api.auth import create_token, verify_token
 from django.contrib.auth.hashers import check_password
@@ -81,7 +76,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
   user = execute_query("SELECT id, password FROM auth_user WHERE username=%s", (form_data.username,))
   if user:
     pwd = user[0]["password"]
-    if check_password(form_data.password, pwd):
+    if django_pbkdf2_sha256.verify(form_data.password, pwd):
       token = create_token(form_data.username)
       return {"access_token": token, "token_type": "bearer"}
   raise HTTPException(status_code=401, detail="Invalid user or password")
