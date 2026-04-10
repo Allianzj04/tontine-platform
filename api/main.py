@@ -3,7 +3,6 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from passlib.handlers.django import django_pbkdf2_sha256
 from api.database import execute_query
 from api.auth import create_token, verify_token
-from django.contrib.auth.hashers import check_password
 
 app = FastAPI()
 
